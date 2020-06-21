@@ -62,6 +62,9 @@ class Atom(LGroupTerm):
     def __eq__(self, other):
         return type(other) is Atom and self.atom == other.atom
 
+    def __len__(self) -> str:
+        return self.atom.__len__()
+
     __hash__ = LGroupTerm.__hash__
 
     def is_identity(self):

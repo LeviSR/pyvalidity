@@ -19,7 +19,7 @@ class LGroupInequation:
     def is_valid(self) -> bool:
         cnf_set = _cnf_to_set(self._relevant_cnf())
         for candidate in cnf_set:
-            max_length = _longest_element(cnf_set)
+            max_length = max([len(elem) for elem in candidate])
             candidate_terms = {t.atom for t in candidate}
             closed = MultiplicativelyClosedSet(candidate_terms, max_length)
             generators = set()
@@ -34,10 +34,6 @@ class LGroupInequation:
 
     def __str__(self):
         return str(self.left_hand_side) + " <= " + str(self.right_hand_side)
-
-
-def _longest_element(list_of_sets):
-    return max([max([x.atom.__len__() for x in lst]) for lst in list_of_sets])
 
 
 def _cnf_to_set(cnf: LGroupTerm) -> List[Set[LGroupTerm]]:
