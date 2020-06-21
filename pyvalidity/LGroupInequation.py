@@ -8,5 +8,5 @@ class LGroupInequation:
         self.right_hand_side = right_hand_side
 
     # LGroupInequation(s, t) returns ts^{-1}, which is the thing that "should be positive"
-    def get_relevant_term(self) -> LGroupTerm:
+    def _relevant_term(self) -> LGroupTerm:
         return self.right_hand_side.prod(self.left_hand_side.inv())
