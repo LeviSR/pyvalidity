@@ -32,6 +32,9 @@ class LGroupInequation:
         # none of the meetands extend
         return True
 
+    def __str__(self):
+        return str(self.left_hand_side) + " <= " + str(self.right_hand_side)
+
 
 def _longest_element(list_of_sets):
     return max([max([x.atom.__len__() for x in lst]) for lst in list_of_sets])

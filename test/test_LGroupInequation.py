@@ -13,3 +13,5 @@ class TestLGroupInequation(TestCase):
     def test_validity(self):
         inequation = LGroupInequation(Atom(GroupTerm([])), self.x.join(self.x.inv()))
         self.assertTrue(inequation.is_valid())
+        inequation = LGroupInequation(Atom(GroupTerm([])), self.x)
+        self.assertFalse(inequation.is_valid())

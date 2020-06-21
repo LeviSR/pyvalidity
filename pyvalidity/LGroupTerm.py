@@ -6,6 +6,8 @@ from pyvalidity.GroupTerm import GroupTerm
 # is either an atom, or a meet, join of a set of terms, or a product of a list
 # of terms. In particular, meet, join, product are all associative, and meet,
 # join satisfy the absorption law. Implements the cnf of an LGroupTerm
+# this class is the worst class of all and should be refactored ASAP.
+# I just don't know how ...
 class LGroupTerm:
     def is_identity(self):
         pass
