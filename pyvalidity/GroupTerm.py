@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from pyvalidity.Literal import Literal
 
@@ -46,3 +46,12 @@ class GroupTerm:
             if self.literals[i] == self.literals[i+1].inv():
                 return False
         return True
+
+    def positive_literals(self) -> Set[Literal]:
+        result = set()
+        for x in self.literals:
+            if x.is_inverted:
+                result.add(x.inv())
+            else:
+                result.add(x)
+        return result
