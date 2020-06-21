@@ -11,10 +11,11 @@ class GroupTerm:
 
     def __eq__(self, other):
         # assert self.is_reduced() and other.is_reduced()
-        return isinstance(other, GroupTerm) and self.literals == other.literals
+        # return isinstance(other, GroupTerm) and self.literals == other.literals
+        return self.literals == other.literals
 
     def __str__(self):
-        if self.literals == []:
+        if not self.literals:
             return 'e'
         string = ""
         for lit in self.literals:

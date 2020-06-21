@@ -8,6 +8,15 @@ from pyvalidity.GroupTerm import GroupTerm
 
 # LGroupTerm
 
+class TestAtom(TestCase):
+    def setUp(self):
+        self.identity = Atom(GroupTerm([]))
+
+    def test_is_identity(self):
+        self.assertTrue(self.identity.is_identity())
+        self.assertTrue(self.identity.inv().is_identity())
+
+
 class TestMeet(TestCase):
     def setUp(self):
         self.x = Atom(GroupTerm([Literal('x', False)]))
@@ -35,6 +44,7 @@ class TestProduct(TestCase):
 
     def test_order_of_product(self):
         self.assertEqual([self.x, self.y], Prod([self.x, self.y]).factors)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,13 +26,13 @@ class LGroupTerm:
 
     def cast_to(self, other):
         self.__class__ = other.__class__
-        if type(other) is Atom:
+        if other.is_atom():
             self.atom = other.atom
-        elif type(other) is Meet:
+        elif other.is_meet():
             self.meetands = other.meet
-        elif type(other) is Join:
+        elif other.is_join():
             self.joinands = other.join
-        elif type(other) is Prod:
+        elif other.is_prod():
             self.factors = other.prod
         self.reduce()
 
@@ -57,7 +57,7 @@ class Atom(LGroupTerm):
         return self.atom.__str__()
 
     def __eq__(self, other):
-        return isinstance(other, Atom) and self.atom == other.atom
+        return type(other) is Atom and self.atom == other.atom
 
     __hash__ = LGroupTerm.__hash__
 
@@ -72,6 +72,15 @@ class Atom(LGroupTerm):
 
     def inv(self):
         return Atom(self.atom.inv())
+
+    def is_join(self):
+        return False
+    def is_atom(self):
+        return True
+    def is_meet(self):
+        return False
+    def is_prod(self):
+        return False
 
 
 class Meet(LGroupTerm):
@@ -117,6 +126,15 @@ class Meet(LGroupTerm):
 
     def inv(self):
         return Join({x.inv() for x in self.meetands})
+
+    def is_join(self):
+        return False
+    def is_atom(self):
+        return False
+    def is_meet(self):
+        return True
+    def is_prod(self):
+        return False
 
 
 class Join(LGroupTerm):
@@ -187,6 +205,15 @@ class Join(LGroupTerm):
     def inv(self):
         return Meet({x.inv() for x in self.joinands})
 
+    def is_join(self):
+        return True
+    def is_atom(self):
+        return False
+    def is_meet(self):
+        return False
+    def is_prod(self):
+        return False
+
 
 class Prod(LGroupTerm):
     def __init__(self, factors: List[LGroupTerm]):
@@ -247,7 +274,7 @@ class Prod(LGroupTerm):
 
         has_joins = False
         for rs in self.factors:
-            if isinstance(rs, Join):
+            if rs.is_join():
                 has_joins = True
                 rs_index = self.factors.index(rs)
                 break
@@ -279,3 +306,12 @@ class Prod(LGroupTerm):
     def inv(self):
         # list[::-1] is list reversed
         return Prod([x.inv() for x in self.factors][::-1])
+
+    def is_join(self):
+        return False
+    def is_atom(self):
+        return False
+    def is_meet(self):
+        return False
+    def is_prod(self):
+        return True
