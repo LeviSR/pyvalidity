@@ -42,9 +42,6 @@ class TestProduct(TestCase):
         self.x = Atom(GroupTerm([Literal('x')]))
         self.y = Atom(GroupTerm([Literal('y')]))
 
-    def test_order_of_product(self):
-        self.assertEqual([self.x, self.y], Prod([self.x, self.y]).factors)
-
 
 if __name__ == '__main__':
     unittest.main()

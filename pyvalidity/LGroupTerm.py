@@ -31,11 +31,11 @@ class LGroupTerm:
         if other.is_atom():
             self.atom = other.atom
         elif other.is_meet():
-            self.meetands = other.meet
+            self.meetands = other.meetands
         elif other.is_join():
-            self.joinands = other.join
+            self.joinands = other.joinands
         elif other.is_prod():
-            self.factors = other.prod
+            self.factors = other.factors
         self.reduce()
 
     def inv(self):
@@ -89,9 +89,6 @@ class Meet(LGroupTerm):
     def __init__(self, meetands: Set[LGroupTerm]):
         self.meetands = meetands
         self.reduce()
-        if len(meetands) == 1:
-            for t in meetands:
-                self.cast_to(t)
 
     def __str__(self):
         if len(self.meetands) == 0:
@@ -119,6 +116,11 @@ class Meet(LGroupTerm):
                 new_meetands.add(t)
         self.meetands = new_meetands
 
+        if len(self.meetands) == 1:
+            for t in self.meetands:
+                self.cast_to(t)
+                self.reduce()
+
     # cnf(s ^ t) = cnf(s) ^ cnf(t)
     def cnf(self):
         cnfs = set()
@@ -141,11 +143,7 @@ class Meet(LGroupTerm):
 
 class Join(LGroupTerm):
     def __init__(self, joinands: Set[LGroupTerm]):
-        if len(joinands) == 1:
-            for t in joinands:
-                self.cast_to(t)
-        else:
-            self.joinands = joinands
+        self.joinands = joinands
         self.reduce()
 
     def __str__(self):
@@ -173,6 +171,11 @@ class Join(LGroupTerm):
             else:
                 new_joinands.add(t)
         self.joinands = new_joinands
+
+        if len(self.joinands) == 1:
+            for t in self.joinands:
+                self.cast_to(t)
+                self.reduce()
 
     # cnf((r ^ s) v t) = cnf(r v t) ^ cnf(s v t)
     # otherwise cnf(s v t) = cnf(s) v cnf(t)
@@ -219,11 +222,7 @@ class Join(LGroupTerm):
 
 class Prod(LGroupTerm):
     def __init__(self, factors: List[LGroupTerm]):
-        if len(factors) == 1:
-            for t in factors:
-                self.cast_to(t)
-        else:
-            self.factors = factors
+        self.factors = factors
         self.reduce()
 
     def __str__(self):
@@ -242,11 +241,27 @@ class Prod(LGroupTerm):
     # removes identities. assumes that components are reduced
     def reduce(self):
         new_factors = []
+        # strip identities
         for factor in self.factors:
             if not factor.is_identity():
                 new_factors.append(factor)
-
         self.factors = new_factors
+
+        # multiply together consecutive factors that are atoms
+        i = 0
+        while i < len(self.factors) - 1:
+            if self.factors[i].is_atom() and self.factors[i+1].is_atom():
+                self.factors[i] = Atom(self.factors[i].atom.times(self.factors[i+1].atom))
+                del self.factors[i+1]
+            else:
+                i += 1
+
+        if len(self.factors) == 1:
+            for t in self.factors:
+                self.cast_to(t)
+                self.reduce()
+
+
 
     def cnf(self):
         has_meets = False
