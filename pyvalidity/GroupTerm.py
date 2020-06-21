@@ -7,6 +7,11 @@ class GroupTerm:
     # We make the convention that all group terms are always reduced.
     def __init__(self, literals: List[Literal]):
         self.literals = literals
+        # the empty literal should be the identity, but this should not be important
+        if self.literals != [] and self.literals[0].char == '':
+            self.literals = []
+            # we should not be here
+            assert False
         self.reduce()
 
     def __eq__(self, other):

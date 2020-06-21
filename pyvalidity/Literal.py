@@ -1,6 +1,8 @@
 class Literal:
 
     def __init__(self, char: chr, is_inverted: bool = False):
+        if char == '':
+            assert False
         self.char = char
         self.is_inverted = is_inverted
 

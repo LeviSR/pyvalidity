@@ -54,6 +54,7 @@ class LGroupTerm:
 class Atom(LGroupTerm):
     def __init__(self, atom: GroupTerm):
         self.atom = atom
+        self.reduce()
 
     def __str__(self):
         return self.atom.__str__()
@@ -67,7 +68,9 @@ class Atom(LGroupTerm):
         return self.atom == GroupTerm([])
 
     def reduce(self):
-        pass
+        if self.atom.literals == ['']:
+            # this should not happen and will have caused bugs.
+            assert False
 
     def cnf(self):
         return self
@@ -247,6 +250,14 @@ class Prod(LGroupTerm):
                 new_factors.append(factor)
         self.factors = new_factors
 
+        # absorb products
+        i = 0
+        while i < len(self.factors):
+            if self.factors[i].is_prod():
+                self.factors = self.factors[:i] + self.factors[i].factors + self.factors[i+1:]
+            else:
+                i += 1
+
         # multiply together consecutive factors that are atoms
         i = 0
         while i < len(self.factors) - 1:
@@ -261,7 +272,8 @@ class Prod(LGroupTerm):
                 self.cast_to(t)
                 self.reduce()
 
-
+        if len(self.factors) == 0:
+            self.cast_to(Atom(GroupTerm([])))
 
     def cnf(self):
         has_meets = False
@@ -312,7 +324,7 @@ class Prod(LGroupTerm):
                                  .prod(r)
                                  .prod(Prod(rest_right))
                                  .cnf())
-            return Join(new_joinands)
+            return Join(new_joinands).cnf()
 
         # if it's here there's neither meets nor joins in the factors
         cnfs = []
