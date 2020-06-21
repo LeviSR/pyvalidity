@@ -36,6 +36,18 @@ class LGroupTerm:
             self.factors = other.prod
         self.reduce()
 
+    def inv(self):
+        # this should not be executed here but in one of the subclasses
+        assert False
+
+    def reduce(self):
+        # this should not be executed
+        assert False
+
+    def cnf(self):
+        # this should not be executed
+        assert False
+
 
 class Atom(LGroupTerm):
     def __init__(self, atom: GroupTerm):
