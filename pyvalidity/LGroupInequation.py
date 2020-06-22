@@ -17,7 +17,8 @@ class LGroupInequation:
         return self.right_hand_side.prod(self.left_hand_side.inv()).cnf()
 
     def is_valid(self) -> bool:
-        cnf_set = _cnf_to_set(self._relevant_cnf())
+        good_cnf = self._relevant_cnf().cnf3()
+        cnf_set = _cnf_to_set(good_cnf)
         for candidate in cnf_set:
             max_length = max([len(elem) for elem in candidate])
             candidate_terms = {t.atom for t in candidate}

@@ -31,7 +31,7 @@ class MultiplicativelyClosedSet:
     def close(self):
         while self.unchecked_pairs:
             # sets to avoid duplicate entries
-            # but this takes long for > 1 000 000 unchecked pairs:
+            # but this takes long for > 100 000 unchecked pairs:
             new_elements = {s.times(t) for s, t in self.unchecked_pairs
                             if len(s.times(t)) <= self.max_length
                             and s.times(t) not in self.elements}

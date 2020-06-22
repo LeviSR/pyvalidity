@@ -21,15 +21,15 @@ class TestSantschisEquations(TestCase):
         self.invalid_strings = [
              "e <= xx v xy v yX ",
              "(x ^ e)(x ^ e) <= Y(x ^ e)y",         # this one is hard apparently, but doable.
-                                                    # expect it to take 1-5 seconds. it is not
+                                                    # expect it to take 1 second. it is not
                                                     # consistent how long it takes.
              "e <= x v (yXY)",
-             # "(xyz) ^ (rst) <= (xsz) v (ryt)"      # very hard.
+             "(xyz) ^ (rst) <= (xsz) v (ryt)"      # very hard. takes a minute
         ]
 
     def test_valids(self):
         for s in self.valid_strings:
-            self.assertTrue(Parser(s).parse().is_valid())
+            self.assertTrue(Parser(s).parse().is_valid(), s + " failed.")
 
     def test_invalids(self):
         for s in self.invalid_strings:

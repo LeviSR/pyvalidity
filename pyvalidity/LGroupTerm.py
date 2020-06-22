@@ -1,12 +1,12 @@
 from typing import Set, List
 
+from Literal import Literal
 from pyvalidity.GroupTerm import GroupTerm
 
 
 # is either an atom, or a meet, join of a set of terms, or a product of a list
 # of terms. In particular, meet, join, product are all associative, and meet,
 # join satisfy the absorption law. Implements the cnf of an LGroupTerm
-# TODO: this class is the worst class of all and should be refactored ASAP.
 class LGroupTerm:
     def is_identity(self):
         pass
@@ -61,6 +61,53 @@ class LGroupTerm:
         # this should not be executed
         assert False
 
+    # eliminates long atoms by replacing them with joins of shorter atoms, partially
+    # made up of new literals (i.e., not currently appearing in )
+    def cnf3(self):
+        normal_cnf = self.cnf()
+        if normal_cnf.is_atom():
+            return _split_atom(normal_cnf, Counter())
+        elif normal_cnf.is_join():
+            if len(self.joinands) <= 2:
+                return normal_cnf
+            counter = Counter()
+            return Join({_split_atom(joinand, counter) for joinand in normal_cnf.joinands})
+        # normal_cnf is now a meet
+        assert normal_cnf.is_meet()
+        return Meet({meetand.cnf3() for meetand in normal_cnf.meetands})
+
+
+#helper class
+class Counter:
+    current: int
+
+    def __init__(self):
+        self.current = -1
+
+    def step(self):
+        self.current += 1
+        return self.current
+
+
+# abcdef |-> ab(-x0) v (x0)c(-x1) v (x1)d(-x2) v (x2)ef
+# may cause problems if some variables are called x1 or something.
+# but users are instructed to use single characters
+def _split_atom(atom, counter):
+    if len(atom) <= 3:
+        return atom
+    first_literals = atom.atom.literals[:2] + [Literal('x0', False)]
+    last_literals = [Literal('x' + str(len(atom) - 4), True)] + atom.atom.literals[-2:]
+    first_meetand = Atom(GroupTerm(first_literals))
+    last_meetand = Atom(GroupTerm(last_literals))
+
+    joinands = {first_meetand, last_meetand}
+
+    for i, mid in enumerate(atom.atom.literals[2:-2]):
+        pre = Literal('x' + str(i), True)
+        post = Literal('x' + str(i+1), False)
+        joinands.add(Atom(GroupTerm([pre, mid, post])))
+
+    return Join(joinands)
 
 class Atom(LGroupTerm):
     def __init__(self, atom: GroupTerm):
