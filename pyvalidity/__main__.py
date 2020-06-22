@@ -1,4 +1,4 @@
-from Parser import Parser
+from pyvalidity.Parser import Parser
 
 print("Please enter an l-group (in)equation using the characters '^', 'v' for ",
       "meets, joins, respectively, prefixed '-' for inverses, and one-character ",

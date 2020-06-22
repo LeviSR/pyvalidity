@@ -1,5 +1,5 @@
-from LGroupInequation import LGroupInequation
-from LGroupTerm import LGroupTerm
+from pyvalidity.LGroupInequation import LGroupInequation
+from pyvalidity.LGroupTerm import LGroupTerm
 
 
 class LGroupEquation:

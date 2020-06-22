@@ -1,8 +1,8 @@
 from typing import Set, List
 
-from MultiplicativelyClosedSet import MultiplicativelyClosedSet
-from PartialOrder import PartialOrder
-from TruncatedFreeGroup import TruncatedFreeGroup
+from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
+from pyvalidity.PartialOrder import PartialOrder
+from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
 from pyvalidity.LGroupTerm import LGroupTerm, Atom, Join
 
 
