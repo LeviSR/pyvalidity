@@ -6,8 +6,8 @@ This program checks validity of an l-group inequation e <= t by
 # Usage
   1. Fork the repository to your own GitHub account.
   2. Open a terminal.
-  3. Clone your repository into the active folder by executing **git clone \<link to your fork>** (without the <>).
-  4. Execute **cd pyvalidity**
-  5. Execute **python -m pyvalidity**. Make sure you have Python installed and have added to
+  3. Clone your repository into the active folder by executing `git clone <link to your fork>` (without the <>).
+  4. Execute `cd pyvalidity`
+  5. Execute `python -m pyvalidity`. Make sure you have Python installed and have added to
   your PATH variable.
   6. Follow the prompts.
