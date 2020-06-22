@@ -4,6 +4,7 @@ import unittest
 from pyvalidity.Literal import Literal
 from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
 
+
 class TestTruncatedFreeGroup(TestCase):
     def setUp(self):
         self.literals = {Literal('x'), Literal('y')}

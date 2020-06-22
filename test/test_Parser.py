@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from GroupTerm import GroupTerm
-from LGroupTerm import Atom
-from Literal import Literal
-from Parser import Parser
+from pyvalidity.GroupTerm import GroupTerm
+from pyvalidity.LGroupTerm import Atom
+from pyvalidity.Literal import Literal
+from pyvalidity.Parser import Parser
 
 
 class TestParser(TestCase):

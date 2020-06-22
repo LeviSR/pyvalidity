@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from Parser import Parser
+from pyvalidity.Parser import Parser
 
 
 class TestSantschisEquations(TestCase):
