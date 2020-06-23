@@ -4,33 +4,55 @@ from pyvalidity.Parser import Parser
 
 
 class TestSantschisEquations(TestCase):
-    def setUp(self) -> None:
-        self.valid_strings = [
-            "x ^ (y v z) = (x ^ y) v (x ^ z) ",
-            "x(y v z)w = xyw v xzw",
-            "x(y ^ z)w = xyw ^ xzw ",
-            "X ^ Y = -(x v y)",
-            "X v Y = -(x ^ y)",
-            "e <= x v X",
-            "xy ^ e <= x v y",
-            "e <= xx v yy v XY",
-            "(Xy ^ e) v (Yx ^ e) = e",
-            "(xY ^ e) v (yX ^ e) = e"
-        ]
+    def _check_valid(self, string):
+        self.assertTrue(Parser(string).parse().is_valid())
 
-        self.invalid_strings = [
-             "e <= xx v xy v yX ",
-             "(x ^ e)(x ^ e) <= Y(x ^ e)y",         # this one is hard apparently, but doable.
-                                                    # expect it to take 1 second. it is not
-                                                    # consistent how long it takes.
-             "e <= x v (yXY)",
-             # "(xyz) ^ (rst) <= (xsz) v (ryt)"      # very hard. takes a minute
-        ]
+    def _check_invalid(self, string):
+        self.assertFalse(Parser(string).parse().is_valid())
 
-    def test_valids(self):
-        for s in self.valid_strings:
-            self.assertTrue(Parser(s).parse().is_valid(), s + " failed.")
+    def test_distributive(self):
+        self._check_valid( "x ^ (y v z) = (x ^ y) v (x ^ z) ")
 
-    def test_invalids(self):
-        for s in self.invalid_strings:
-            self.assertFalse(Parser(s).parse().is_valid())
+    def test_mul_distributive1(self):
+        self._check_valid("x(y v z)w = xyw v xzw")
+
+    def test_mul_distributive2(self):
+        self._check_valid("x(y ^ z)w = xyw ^ xzw ")
+
+    def test_de_morgan1(self):
+        self._check_valid("X ^ Y = -(x v y)")
+
+    def test_de_morgan2(self):
+        self._check_valid("X v Y = -(x ^ y)")
+
+    # in Georges book
+    def test_exercise18(self):
+        self._check_valid("e <= x v X")
+        self._check_valid("xy ^ e <= x v y")
+
+    # in Almudenas thesis
+    def test_example_1point3point6(self):
+        self._check_valid("e <= xx v yy v XY")
+
+    def test_left_prelinearity(self):
+        self._check_valid("(Xy ^ e) v (Yx ^ e) = e")
+
+    def test_right_prelinearity(self):
+        self._check_valid("(xY ^ e) v (yX ^ e) = e")
+
+    def test_commutativity(self):
+        self._check_invalid("xy = yx")
+
+    def test_example_1point3point7(self):
+        self._check_invalid("e <= xx v xy v yX ")
+
+    def test_representable_l_groups(self):
+        self._check_invalid("e <= x v yXY")
+
+    def test_weakly_abelian(self):
+        self._check_invalid("(x ^ e)(x ^ e) <= Y(x ^ e)y")
+
+    def test_representable_l_monoids(self):
+        # hard, can take more than a minute. comment this out if you're just checking functionality
+        pass
+        self._check_invalid("xyz ^ rst <= xsz v ryt")

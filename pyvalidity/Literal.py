@@ -21,3 +21,6 @@ class Literal:
 
     def __hash__(self):
         return str(self).__hash__()
+
+    def non_inverted(self):
+        return Literal(self.char)

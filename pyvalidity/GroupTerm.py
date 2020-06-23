@@ -1,4 +1,6 @@
+from __future__ import annotations
 from typing import List, Set
+
 
 from pyvalidity.Literal import Literal
 
@@ -61,3 +63,11 @@ class GroupTerm:
             else:
                 result.add(x)
         return result
+
+    def replace_under_bijection(self, old_symbols: List[Literal], new_symbols: List[Literal]) -> GroupTerm:
+        assert len(old_symbols) == len(new_symbols)
+        new_literals = []
+        for literal in self.literals:
+            current_symbol_index = old_symbols.index(literal.non_inverted())
+            new_literals.append(Literal(new_symbols[current_symbol_index].char, literal.is_inverted))
+        return GroupTerm(new_literals)

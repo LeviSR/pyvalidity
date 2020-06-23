@@ -40,5 +40,17 @@ class TestTimes(TestGroupTerm):
                          GroupTerm([self.lit]).times(GroupTerm([self.lit]).inv()))
 
 
+class TestReplace(TestCase):
+    def test_replace(self):
+        x = Literal('x')
+        y = Literal('y')
+        z = Literal('z')
+
+        term = GroupTerm([x, y.inv(), z]).replace_under_bijection([x, y, z], [z, x, y])
+        string = str(term)
+        self.assertEqual(GroupTerm([z, x.inv(), y]), term,
+                         "expected zXy but got " + str(term))
+
+
 if __name__ == '__main__':
     unittest.main()
