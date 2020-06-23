@@ -146,7 +146,6 @@ class Atom(LGroupTerm):
         return self.atom == GroupTerm([])
 
     def reduce(self) -> None:
-        assert self.atom.literals != ['']
         pass
 
     def cnf(self) -> LGroupTerm:

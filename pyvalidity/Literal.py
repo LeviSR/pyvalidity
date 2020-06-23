@@ -12,9 +12,7 @@ class Literal:
         return self.char
 
     def __eq__(self, other):
-        return (isinstance(other, Literal)
-                and self.char == other.char
-                and self.is_inverted == other.is_inverted)
+        return self.char == other.char and self.is_inverted == other.is_inverted
 
     def inv(self):
         return Literal(self.char, not self.is_inverted)
