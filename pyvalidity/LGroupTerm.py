@@ -203,6 +203,8 @@ class Meet(LGroupTerm):
 
 
 class Join(LGroupTerm):
+    joinands: Set[LGroupTerm]
+
     def __init__(self, joinands: Set[LGroupTerm]):
         self.joinands = joinands
         self.reduce()

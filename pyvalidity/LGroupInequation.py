@@ -1,9 +1,9 @@
-from typing import Set, List
+from typing import Set, List, Union
 
 from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
 from pyvalidity.PartialOrder import PartialOrder
 from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
-from pyvalidity.LGroupTerm import LGroupTerm
+from pyvalidity.LGroupTerm import LGroupTerm, Atom, Join, Meet
 
 
 class LGroupInequation:
@@ -37,14 +37,32 @@ class LGroupInequation:
         return str(self.left_hand_side) + " <= " + str(self.right_hand_side)
 
 
-def _cnf_to_set(cnf: LGroupTerm) -> List[Set[LGroupTerm]]:
+def _cnf_to_set(cnf: LGroupTerm) -> List[Set[Atom]]:
     # cnf is now of one of the following forms:
     # (i)   a meet of joins of atoms
     # (ii)  a join of atoms
     # (iii) an atom
 
     if cnf.is_atom():
+        cnf: Atom
         return [{cnf}]
     if cnf.is_join():
-        return [cnf.joinands]
-    return [t.joinands for t in cnf.meetands]
+        cnf: Join
+        joinands = set()
+        for j in cnf.joinands:
+            j: Atom
+            joinands.add(j)
+        return [joinands]
+    cnf: Meet
+    meetands = []
+    for m in cnf.meetands:
+        m: Union[Join, Atom]
+        if m.is_atom():
+            m: Atom
+            meetands.append({m})
+        else:
+            m: Join
+            # noinspection PyTypeChecker
+            meetands.append(m.joinands)
+    meetands: List[Set[Atom]]
+    return meetands
