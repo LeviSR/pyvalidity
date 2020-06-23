@@ -1,4 +1,5 @@
-from typing import Set, List
+from __future__ import annotations
+from typing import Set, List, Any
 
 from Literal import Literal
 from pyvalidity.GroupTerm import GroupTerm
@@ -8,7 +9,7 @@ from pyvalidity.GroupTerm import GroupTerm
 # of terms. In particular, meet, join, product are all associative, and meet,
 # join satisfy the absorption law. Implements the cnf of an LGroupTerm
 class LGroupTerm:
-    def is_identity(self):
+    def is_identity(self) -> bool:
         pass
 
     # not sure if having the hash depend on the string representation will
@@ -16,83 +17,85 @@ class LGroupTerm:
     def __hash__(self):
         return self.__str__().__hash__()
 
-    def meet(self, other):
+    def meet(self, other) -> Meet:
         return Meet({self, other})
 
-    def join(self, other):
+    def join(self, other) -> Join:
         return Join({self, other})
 
-    def prod(self, other):
+    def prod(self, other) -> Prod:
         return Prod([self, other])
 
-    def cast_to(self, other):
+    def cast_to(self, other) -> None:
         self.__class__ = other.__class__
         if other.is_atom():
-            self.atom = other.atom
+            other: Atom
+            self: Atom
+            self.__init__(other.atom)
         elif other.is_meet():
-            self.meetands = other.meetands
+            other: Meet
+            self: Meet
+            self.__init__(other.meetands)
         elif other.is_join():
-            self.joinands = other.joinands
+            other: Join
+            self: Join
+            self.__init__(other.joinands)
         elif other.is_prod():
-            self.factors = other.factors
+            other: Prod
+            self: Prod
+            self.__init__(other.factors)
         self.reduce()
 
-    def is_atom(self):
+    def is_atom(self) -> bool:
         return isinstance(self, Atom)
 
-    def is_meet(self):
+    def is_meet(self) -> bool:
         return isinstance(self, Meet)
 
-    def is_join(self):
+    def is_join(self) -> bool:
         return isinstance(self, Join)
 
-    def is_prod(self):
+    def is_prod(self) -> bool:
         return isinstance(self, Prod)
 
-    def inv(self):
+    def inv(self) -> LGroupTerm:
         # this should not be executed here but in one of the subclasses
-        assert False
+        pass
 
-    def reduce(self):
-        # this should not be executed
-        assert False
+    def reduce(self) -> LGroupTerm:
+        pass
 
-    def cnf(self):
-        # this should not be executed
-        assert False
+    def cnf(self) -> LGroupTerm:
+        pass
 
     # eliminates long atoms by replacing them with joins of shorter atoms, partially
     # made up of new literals (i.e., not currently appearing in )
-    def cnf3(self):
+    def cnf3(self) -> LGroupTerm:
+        normal_cnf: LGroupTerm
         normal_cnf = self.cnf()
         if normal_cnf.is_atom():
-            return _split_atom(normal_cnf, Counter())
+            normal_cnf: Atom
+            return _split_atom(normal_cnf, _Counter())
         elif normal_cnf.is_join():
-            if len(self.joinands) <= 2:
+            normal_cnf: Join
+            if len(normal_cnf.joinands) <= 2:
                 return normal_cnf
-            counter = Counter()
-            return Join({_split_atom(joinand, counter) for joinand in normal_cnf.joinands})
+            counter = _Counter()
+            new_joinands = set()
+            for joinand in normal_cnf.joinands:
+                joinand: Atom
+                new_joinands.add(_split_atom(joinand, counter))
+            return Join(new_joinands)
         # normal_cnf is now a meet
         assert normal_cnf.is_meet()
+        normal_cnf: Meet
         return Meet({meetand.cnf3() for meetand in normal_cnf.meetands})
-
-
-#helper class
-class Counter:
-    current: int
-
-    def __init__(self):
-        self.current = -1
-
-    def step(self):
-        self.current += 1
-        return self.current
 
 
 # abcdef |-> ab(-x0) v (x0)c(-x1) v (x1)d(-x2) v (x2)ef
 # may cause problems if some variables are called x1 or something.
 # but users are instructed to use single characters
-def _split_atom(atom, counter):
+def _split_atom(atom, counter) -> Join:
     if len(atom) <= 3:
         return atom
     first_literals = atom.atom.literals[:2] + [Literal('x0', False)]
@@ -102,12 +105,25 @@ def _split_atom(atom, counter):
 
     joinands = {first_meetand, last_meetand}
 
-    for i, mid in enumerate(atom.atom.literals[2:-2]):
-        pre = Literal('x' + str(i), True)
-        post = Literal('x' + str(i+1), False)
+    for mid in atom.atom.literals[2:-2]:
+        pre = Literal('x' + str(counter.current), True)
+        post = Literal('x' + str(counter.step()), False)
         joinands.add(Atom(GroupTerm([pre, mid, post])))
 
     return Join(joinands)
+
+
+# helper class
+class _Counter:
+    current: int
+
+    def __init__(self):
+        self.current = 0
+
+    def step(self):
+        self.current += 1
+        return self.current
+
 
 class Atom(LGroupTerm):
     def __init__(self, atom: GroupTerm):
@@ -125,18 +141,17 @@ class Atom(LGroupTerm):
 
     __hash__ = LGroupTerm.__hash__
 
-    def is_identity(self):
+    def is_identity(self) -> bool:
         return self.atom == GroupTerm([])
 
-    def reduce(self):
-        if self.atom.literals == ['']:
-            # this should not happen and will have caused bugs.
-            assert False
+    def reduce(self) -> None:
+        assert self.atom.literals != ['']
+        pass
 
-    def cnf(self):
+    def cnf(self) -> LGroupTerm:
         return self
 
-    def inv(self):
+    def inv(self) -> LGroupTerm:
         return Atom(self.atom.inv())
 
 
@@ -158,11 +173,11 @@ class Meet(LGroupTerm):
 
     __hash__ = LGroupTerm.__hash__
 
-    def is_identity(self):
+    def is_identity(self) -> bool:
         return False
 
     # assumes that meetands are reduced. absorbs meets
-    def reduce(self):
+    def reduce(self) -> None:
         new_meetands = set()
         for t in self.meetands:
             if isinstance(t, Meet):
@@ -177,13 +192,13 @@ class Meet(LGroupTerm):
                 self.reduce()
 
     # cnf(s ^ t) = cnf(s) ^ cnf(t)
-    def cnf(self):
+    def cnf(self) -> LGroupTerm:
         cnfs = set()
         for meetand in self.meetands:
             cnfs.add(meetand.cnf())
         return Meet(cnfs)
 
-    def inv(self):
+    def inv(self) -> LGroupTerm:
         return Join({x.inv() for x in self.meetands})
 
 
@@ -205,11 +220,11 @@ class Join(LGroupTerm):
 
     __hash__ = LGroupTerm.__hash__
 
-    def is_identity(self):
+    def is_identity(self) -> bool:
         return False
 
     # absorbs joins. assumes that joinands are reduced
-    def reduce(self):
+    def reduce(self) -> None:
         new_joinands = set()
         for t in self.joinands:
             if isinstance(t, Join):
@@ -225,8 +240,10 @@ class Join(LGroupTerm):
 
     # cnf((r ^ s) v t) = cnf(r v t) ^ cnf(s v t)
     # otherwise cnf(s v t) = cnf(s) v cnf(t)
-    def cnf(self):
+    def cnf(self) -> LGroupTerm:
         has_meets = False
+
+        rs = None
         for rs in self.joinands:
             if isinstance(rs, Meet):
                 has_meets = True
@@ -272,11 +289,11 @@ class Prod(LGroupTerm):
 
         return string
 
-    def is_identity(self):
+    def is_identity(self) -> bool:
         return self.factors == []
 
     # removes identities. assumes that components are reduced
-    def reduce(self):
+    def reduce(self) -> None:
         new_factors = []
         # strip identities
         for factor in self.factors:
@@ -309,8 +326,11 @@ class Prod(LGroupTerm):
         if len(self.factors) == 0:
             self.cast_to(Atom(GroupTerm([])))
 
-    def cnf(self):
+    def cnf(self) -> LGroupTerm:
         has_meets = False
+        rs: Any
+        rs = None
+        rs_index = -1
         for rs in self.factors:
             if isinstance(rs, Meet):
                 has_meets = True
@@ -318,6 +338,7 @@ class Prod(LGroupTerm):
                 break
 
         # rs is now the first meet
+        rs: Meet
         if has_meets:
             rest_left = []
             rest_right = []
@@ -329,10 +350,8 @@ class Prod(LGroupTerm):
 
             new_meetands = set()
             for r in rs.meetands:
-                new_meetands.add(Prod(rest_left)
-                                 .prod(r)
-                                 .prod(Prod(rest_right))
-                                 .cnf())
+                new_meetand = Prod(rest_left).prod(r).prod(Prod(rest_right))
+                new_meetands.add(new_meetand)
             return Meet(new_meetands)
 
         has_joins = False
@@ -343,6 +362,7 @@ class Prod(LGroupTerm):
                 break
 
         # rs is now the first join
+        rs: Join
         if has_joins:
             rest_left = []
             rest_right = []
@@ -354,10 +374,8 @@ class Prod(LGroupTerm):
 
             new_joinands = set()
             for r in rs.joinands:
-                new_joinands.add(Prod(rest_left)
-                                 .prod(r)
-                                 .prod(Prod(rest_right))
-                                 .cnf())
+                new_joinand = Prod(rest_left).prod(r).prod(Prod(rest_right)).cnf()
+                new_joinands.add(new_joinand)
             return Join(new_joinands).cnf()
 
         # if it's here there's neither meets nor joins in the factors
@@ -366,7 +384,6 @@ class Prod(LGroupTerm):
             cnfs.append(factor.cnf())
         return Prod(cnfs)
 
-    def inv(self):
+    def inv(self) -> Prod:
         # list[::-1] is list reversed
         return Prod([x.inv() for x in self.factors][::-1])
-

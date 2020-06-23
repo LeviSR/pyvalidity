@@ -3,7 +3,7 @@ from typing import Set, List
 from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
 from pyvalidity.PartialOrder import PartialOrder
 from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
-from pyvalidity.LGroupTerm import LGroupTerm, Atom, Join
+from pyvalidity.LGroupTerm import LGroupTerm
 
 
 class LGroupInequation:
@@ -12,7 +12,7 @@ class LGroupInequation:
         self.left_hand_side = left_hand_side
         self.right_hand_side = right_hand_side
 
-    # LGroupInequation(s, t) returns ts^{-1}, which is the thing that "should be positive"
+    # _relevant_cnf(s, t) returns cnf(ts^{-1}), which is the thing that "should be positive"
     def _relevant_cnf(self) -> LGroupTerm:
         return self.right_hand_side.prod(self.left_hand_side.inv()).cnf()
 
@@ -43,7 +43,6 @@ def _cnf_to_set(cnf: LGroupTerm) -> List[Set[LGroupTerm]]:
     # (ii)  a join of atoms
     # (iii) an atom
 
-    # (i)
     if cnf.is_atom():
         return [{cnf}]
     if cnf.is_join():

@@ -24,7 +24,7 @@ class TestSantschisEquations(TestCase):
                                                     # expect it to take 1 second. it is not
                                                     # consistent how long it takes.
              "e <= x v (yXY)",
-             "(xyz) ^ (rst) <= (xsz) v (ryt)"      # very hard. takes a minute
+             # "(xyz) ^ (rst) <= (xsz) v (ryt)"      # very hard. takes a minute
         ]
 
     def test_valids(self):
