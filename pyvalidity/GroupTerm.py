@@ -17,7 +17,7 @@ class GroupTerm:
         self.reduce()
 
     def __eq__(self, other):
-        # assert self.is_reduced() and other.is_reduced()
+        assert self.is_reduced() and other.is_reduced()
         # return isinstance(other, GroupTerm) and self.literals == other.literals
         return self.literals == other.literals
 
@@ -40,8 +40,10 @@ class GroupTerm:
         while i <= len(self.literals) - 2:
             if self.literals[i] == self.literals[i+1].inv():
                 del self.literals[i:i+2]
+                i = max(i-1, 0)
             else:
                 i = i + 1
+        assert self.is_reduced()
 
     def times(self, other):
         return GroupTerm(self.literals + other.literals)
@@ -71,3 +73,9 @@ class GroupTerm:
             current_symbol_index = old_symbols.index(literal.non_inverted())
             new_literals.append(Literal(new_symbols[current_symbol_index].char, literal.is_inverted))
         return GroupTerm(new_literals)
+
+    def ends_with(self, literal):
+        return self.literals != [] and self.literals[-1] == literal
+
+    def first_literal(self):
+        return self.literals[0] if self.literals != [] else None

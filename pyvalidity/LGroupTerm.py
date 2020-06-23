@@ -78,7 +78,7 @@ class LGroupTerm:
             return _split_atom(normal_cnf, _Counter())
         elif normal_cnf.is_join():
             normal_cnf: Join
-            if len(normal_cnf.joinands) <= 2:
+            if len(normal_cnf.joinands) < 2:
                 return normal_cnf
             counter = _Counter()
             new_joinands = set()
@@ -98,8 +98,8 @@ class LGroupTerm:
 def _split_atom(atom, counter) -> Join:
     if len(atom) <= 3:
         return atom
-    first_literals = atom.atom.literals[:2] + [Literal('x0', False)]
-    last_literals = [Literal('x' + str(len(atom) - 4), True)] + atom.atom.literals[-2:]
+    first_literals = atom.atom.literals[:2] + [Literal('x' + str(counter.current), False)]
+    last_literals = [Literal('x' + str(len(atom) - 4 + counter.current), True)] + atom.atom.literals[-2:]
     first_meetand = Atom(GroupTerm(first_literals))
     last_meetand = Atom(GroupTerm(last_literals))
 
@@ -110,6 +110,7 @@ def _split_atom(atom, counter) -> Join:
         post = Literal('x' + str(counter.step()), False)
         joinands.add(Atom(GroupTerm([pre, mid, post])))
 
+    counter.step()
     return Join(joinands)
 
 
@@ -302,6 +303,7 @@ class Prod(LGroupTerm):
             if not factor.is_identity():
                 new_factors.append(factor)
         self.factors = new_factors
+        assert not isinstance(self.factors, set)
 
         # absorb products
         i = 0

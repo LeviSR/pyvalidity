@@ -5,10 +5,16 @@ from pyvalidity.Literal import Literal
 
 # Literal
 
+
 class TestLiteral(TestCase):
     def setUp(self):
         self.lit = Literal('a', False)
         self.lit_inv = Literal('a', True)
+
+    def test_equals(self):
+        lit1 = Literal('x0')
+        lit2 = Literal('x0', True)
+        self.assertEqual(lit1, lit2.inv())
 
 
 class TestToString(TestLiteral):

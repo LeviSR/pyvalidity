@@ -38,15 +38,21 @@ class MultiplicativelyClosedSet:
             new_elements = add_later_to_new_elements
             add_later_to_new_elements = set()
             self.elements |= new_elements
-
             for s in new_elements:
-                for t in self.elements:
+                if len(s) == self.max_length:
+                    candidates = {t for t in self.elements if len(t) < self.max_length or
+                                  (s != GroupTerm([]) and t.ends_with(s.first_literal().inv())) or
+                                  (t != GroupTerm([]) and s.ends_with(t.first_literal().inv()))}
+                else:
+                    candidates = self.elements
+                for t in candidates:
                     products = [s.times(t), t.times(s)]
                     for p in products:
-                        if p not in self.elements and len(p) <= self.max_length:
+                        if len(p) <= self.max_length and p not in self.elements:
                             add_later_to_new_elements.add(p)
                             found_something = True
             pass
+        pass
 
     def add(self, element: GroupTerm):
         assert self.unchecked_pairs == []
