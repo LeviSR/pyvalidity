@@ -27,24 +27,26 @@ class MultiplicativelyClosedSet:
             self.close()
         assert self.unchecked_pairs == []
 
-    # seems slow ...
     def close(self):
-        while self.unchecked_pairs:
-            # sets to avoid duplicate entries
-            # but this takes long for > 100 000 unchecked pairs:
-            new_elements = {s.times(t) for s, t in self.unchecked_pairs
-                            if len(s.times(t)) <= self.max_length
-                            and s.times(t) not in self.elements}
-
+        add_later_to_new_elements = {s.times(t) for s, t in self.unchecked_pairs
+                                     if len(s.times(t)) <= self.max_length
+                                     and s.times(t) not in self.elements}
+        self.unchecked_pairs = []
+        found_something = True
+        while found_something:
+            found_something = False
+            new_elements = add_later_to_new_elements
+            add_later_to_new_elements = set()
             self.elements |= new_elements
-            self.unchecked_pairs = []
 
-            # this also takes a while.
             for s in new_elements:
                 for t in self.elements:
-                    self.unchecked_pairs.append((s, t))
-                    if s != t:
-                        self.unchecked_pairs.append((t, s))
+                    products = [s.times(t), t.times(s)]
+                    for p in products:
+                        if p not in self.elements and len(p) <= self.max_length:
+                            add_later_to_new_elements.add(p)
+                            found_something = True
+            pass
 
     def add(self, element: GroupTerm):
         assert self.unchecked_pairs == []
@@ -52,8 +54,6 @@ class MultiplicativelyClosedSet:
         self.unchecked_pairs = [(element, t) for t in self.elements] \
             + [(t, element) for t in self.elements] \
             + [(element, element)]
-
-        self.unchecked_pairs.append((element, element))
         self.elements.add(element)
         self.close()
 

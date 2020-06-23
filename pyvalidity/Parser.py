@@ -1,7 +1,3 @@
-
-
-# a string representing a formula is made up of random characters encoding variables,
-# which are not allowed to be '^', 'v', '-', '(', ')', 'e'
 from pyvalidity.GroupTerm import GroupTerm
 from pyvalidity.LGroupEquation import LGroupEquation
 from pyvalidity.LGroupInequation import LGroupInequation
@@ -9,7 +5,8 @@ from pyvalidity.LGroupTerm import Atom, LGroupTerm, Meet, Join, Prod
 from pyvalidity.Literal import Literal
 
 
-
+# a string representing a formula is made up of random characters encoding variables,
+# which are not allowed to be '^', 'v', '-', '(', ')', 'e'
 class Parser:
     meet_delimiter = '^'
     join_delimiter = 'v'

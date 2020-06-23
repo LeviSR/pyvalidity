@@ -14,7 +14,11 @@ class PartialOrder:
         self.truncated_group = truncated_group
 
         if complement is None:
-            self.complement = truncated_group.elements.copy()
+            if self.max_length >= 1:
+                short = truncated_group.one_shorter().elements.copy()
+                self.complement = short
+            else:
+                self.complement = truncated_group.elements.copy()
             self.complement -= self.positives | {x.inv() for x in self.positives}
             if GroupTerm([]) in self.complement:
                 self.complement.remove(GroupTerm([]))

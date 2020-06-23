@@ -47,3 +47,6 @@ class TruncatedFreeGroup:
 
     def __str__(self):
         return '{' + ', '.join([str(t) for t in self.elements]) + '}'
+
+    def one_shorter(self):
+        return TruncatedFreeGroup(self.max_length - 1, self.generators)
