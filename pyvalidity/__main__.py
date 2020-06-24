@@ -9,5 +9,5 @@ print("\nYour Input: ")
 while True:
     string = input()
     parsed = Parser(string).parse()
-    print("The formula ", str(parsed), " you entered is " + "valid." if parsed.is_valid() else "invalid.")
+    print("The formula ", str(parsed), " you entered is " + ("valid." if parsed.is_valid() else "invalid."))
     print("\nYour Input: ")
