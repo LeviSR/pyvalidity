@@ -3,7 +3,7 @@ from unittest import TestCase
 from pyvalidity.Parser import Parser
 
 
-class TestSantschisEquations(TestCase):
+class TestEquations(TestCase):
     def _check_valid(self, string):
         self.assertTrue(Parser(string).parse().is_valid())
 
@@ -54,5 +54,7 @@ class TestSantschisEquations(TestCase):
 
     def test_representable_l_monoids(self):
         # hard, can take more than a minute. comment this out if you're just checking functionality
-        pass
         self._check_invalid("xyz ^ rst <= xsz v ryt")
+
+    def test_georges_bug(self):
+        self._check_valid("e <= xY v yZ v zX")

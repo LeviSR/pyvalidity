@@ -47,15 +47,16 @@ class MultiplicativelyClosedSet:
         self.unchecked_pairs = []
         found_something = True
 
-        # are of length <= 2 for max_length = 3, which is good enough
-        short_elements = [t for t in self.elements if len(t) < self.max_length]
-        long_elements = [t for t in self.elements if len(t) == self.max_length]
 
         while found_something:
             found_something = False
             new_elements = add_later_to_new_elements
             add_later_to_new_elements = set()
             self.elements |= new_elements
+
+            # are of length <= 2 for max_length = 3, which is good enough
+            short_elements = [t for t in self.elements if len(t) < self.max_length]
+            long_elements = [t for t in self.elements if len(t) == self.max_length]
 
             # the concatenation of left is long_elements, and looks like
             # [[things that start with gen0], [things that start with gen0^-1], [things that start with gen1], ...]
@@ -78,9 +79,9 @@ class MultiplicativelyClosedSet:
                 if len(s) == self.max_length:
                     for i, gen in enumerate(self.generators):
                         if s.literals[0].non_inverted() == gen:
-                            left_index = 2 * i + (1 if s.literals[0].is_inverted else 0)
+                            left_index = 2 * i + (0 if s.literals[0].is_inverted else 1)
                         if s.literals[-1].non_inverted() == gen:
-                            right_index = 2 * i + (1 if s.literals[-1].is_inverted else 0)
+                            right_index = 2 * i + (0 if s.literals[-1].is_inverted else 1)
                     for t in left[right_index]:
                         p = s.times(t)
                         if len(p) <= self.max_length and p not in self.elements:
