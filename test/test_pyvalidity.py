@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from pyvalidity.Parser import Parser
+from Parser import Parser
 
 
 class TestEquations(TestCase):

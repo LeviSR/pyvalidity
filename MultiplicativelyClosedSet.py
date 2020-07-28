@@ -1,7 +1,7 @@
 from typing import Set, List
 
 from Literal import Literal
-from pyvalidity.GroupTerm import GroupTerm
+from GroupTerm import GroupTerm
 
 import itertools
 

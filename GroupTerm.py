@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import List, Set
 
 
-from pyvalidity.Literal import Literal
+from Literal import Literal
 
 
 class GroupTerm:

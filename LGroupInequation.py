@@ -1,9 +1,9 @@
 from typing import Set, List, Union
 
-from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
-from pyvalidity.PartialOrder import PartialOrder
-from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
-from pyvalidity.LGroupTerm import LGroupTerm, Atom, Join, Meet
+from MultiplicativelyClosedSet import MultiplicativelyClosedSet
+from PartialOrder import PartialOrder
+from TruncatedFreeGroup import TruncatedFreeGroup
+from LGroupTerm import LGroupTerm, Atom, Join, Meet
 
 
 class LGroupInequation:

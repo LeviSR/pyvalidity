@@ -1,5 +1,5 @@
-from pyvalidity.Literal import Literal
-from pyvalidity.GroupTerm import GroupTerm
+from Literal import Literal
+from GroupTerm import GroupTerm
 from typing import Set
 
 

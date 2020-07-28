@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Set, List, Any
 
 from Literal import Literal
-from pyvalidity.GroupTerm import GroupTerm
+from GroupTerm import GroupTerm
 
 
 # is either an atom, or a meet, join of a set of terms, or a product of a list

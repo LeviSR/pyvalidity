@@ -1,6 +1,6 @@
-from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
-from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
-from pyvalidity.GroupTerm import GroupTerm
+from MultiplicativelyClosedSet import MultiplicativelyClosedSet
+from TruncatedFreeGroup import TruncatedFreeGroup
+from GroupTerm import GroupTerm
 
 
 class PartialOrder:

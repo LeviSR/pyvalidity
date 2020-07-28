@@ -1,7 +1,7 @@
 from unittest import TestCase
 import unittest
 
-from pyvalidity.Literal import Literal
+from Literal import Literal
 
 # Literal
 

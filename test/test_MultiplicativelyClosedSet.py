@@ -1,9 +1,9 @@
 from unittest import TestCase
 import unittest
 
-from pyvalidity.Literal import Literal
-from pyvalidity.GroupTerm import GroupTerm
-from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
+from Literal import Literal
+from GroupTerm import GroupTerm
+from MultiplicativelyClosedSet import MultiplicativelyClosedSet
 
 
 class TestMultiplicativelyClosedSet(TestCase):

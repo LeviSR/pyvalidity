@@ -1,11 +1,11 @@
 from unittest import TestCase
 import unittest
 
-from pyvalidity.Literal import Literal
-from pyvalidity.PartialOrder import PartialOrder
-from pyvalidity.MultiplicativelyClosedSet import MultiplicativelyClosedSet
-from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
-from pyvalidity.GroupTerm import GroupTerm
+from Literal import Literal
+from PartialOrder import PartialOrder
+from MultiplicativelyClosedSet import MultiplicativelyClosedSet
+from TruncatedFreeGroup import TruncatedFreeGroup
+from GroupTerm import GroupTerm
 
 
 class TestPartialOrder(TestCase):

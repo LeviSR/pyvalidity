@@ -1,8 +1,8 @@
 from unittest import TestCase
 import unittest
 
-from pyvalidity.Literal import Literal
-from pyvalidity.TruncatedFreeGroup import TruncatedFreeGroup
+from Literal import Literal
+from TruncatedFreeGroup import TruncatedFreeGroup
 
 
 class TestTruncatedFreeGroup(TestCase):

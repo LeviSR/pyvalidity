@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from pyvalidity.GroupTerm import GroupTerm
-from pyvalidity.LGroupInequation import LGroupInequation
-from pyvalidity.LGroupTerm import Atom
-from pyvalidity.Literal import Literal
+from GroupTerm import GroupTerm
+from LGroupInequation import LGroupInequation
+from LGroupTerm import Atom
+from Literal import Literal
 
 
 class TestLGroupInequation(TestCase):

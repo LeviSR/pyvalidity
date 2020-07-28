@@ -2,9 +2,9 @@ from unittest import TestCase
 import unittest
 
 from Parser import Parser
-from pyvalidity.LGroupTerm import *
-from pyvalidity.Literal import Literal
-from pyvalidity.GroupTerm import GroupTerm
+from LGroupTerm import *
+from Literal import Literal
+from GroupTerm import GroupTerm
 
 
 # LGroupTerm

@@ -1,8 +1,8 @@
 from unittest import TestCase
 import unittest
 
-from pyvalidity.GroupTerm import GroupTerm
-from pyvalidity.Literal import Literal
+from GroupTerm import GroupTerm
+from Literal import Literal
 
 
 # GroupTerm
