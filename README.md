@@ -6,9 +6,8 @@ This program checks validity of an l-group inequation e <= t by
 # Usage
   1. Open a terminal.
   2. Clone this repository into the active folder by executing `git clone <link to this repository>` in the terminal (without the <>).
-  3. Execute `cd pyvalidity` in the terminal.
-  4. Execute `python __main__.py` in the terminal.
-  5. Follow the prompts.
+  3. Execute `python pyvalidity` in the terminal.
+  4. Follow the prompts.
   
 # Troubleshooting on Windows
 If typing `python` into the terminal opens the Microsoft Store, search for **App execution aliases** in the Start menu and disable the App installers for Python. If your PATH variable contains `...\Python\Python38` you should be able to use the program now.
