@@ -1,3 +1,5 @@
+This has been made obsolete by [raw-validity](https://github.com/raw-bacon/raw-validity).
+
 # pyvalidity 
 This program checks validity of an l-group inequation e <= t by
   - Transforming an t into a meet of joins of products of literals
