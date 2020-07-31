@@ -26,7 +26,8 @@ class PartialOrder:
             self.complement = complement
         assert GroupTerm([]) not in self.complement
 
-    def extends_to_total_order(self):
+    def extends_to_total_order(self, depth):
+        print("The depth is", depth)
         if GroupTerm([]) in self.positives:
             return False
         assert GroupTerm([]) not in self.complement
@@ -48,7 +49,7 @@ class PartialOrder:
             new_complement = self.complement.copy()
             new_complement -= new_set.elements | {x.inv() for x in new_set.elements}
             child = PartialOrder(new_set, self.truncated_group, new_complement)
-            if child.extends_to_total_order():
+            if child.extends_to_total_order(depth+1):
                 return True
         return False
 

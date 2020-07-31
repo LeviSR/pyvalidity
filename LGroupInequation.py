@@ -28,7 +28,7 @@ class LGroupInequation:
                 generators |= x.positive_literals()
             truncated = TruncatedFreeGroup(max_length, generators)
             partial = PartialOrder(closed, truncated)
-            if partial.extends_to_total_order():
+            if partial.extends_to_total_order(1):
                 return False
         # none of the meetands extend
         return True
